@@ -1,0 +1,146 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="chartjs-loader.html">
+
+<dom-module id="agile-process-control">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div class="chart-container" style="position: relative; width:100%">
+      <canvas id="chart"></canvas>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `agile-process-control
+     * web components to visualize agile development data for process control
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AgileProcessControl extends Polymer.Element {
+      static get is() { return 'agile-process-control'; }
+      static get properties() {
+        return {
+          data: {
+            type: Array,
+            value: [{
+                label: "US1234",
+                date: new Date(),
+                estimated: 5,
+                actual: 10
+            }]
+          },
+          _datasets: {
+            type: Array,
+            computed: '_updateData(data)'
+          },
+          chart: {
+            type: Object,
+            computed: '_updateChart(_datasets)'
+          }
+        };
+      }
+
+      _updateData(data) {
+        var datasets = [{
+            label: "Days Actual",
+            data: [],
+            fill: false,
+            pointRadius: 5,
+            pointHoverRadius: 10,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255,99,132,1)',
+            showLine: false
+          },{
+            label: "Days Estimated",
+            data: [],
+            fill: false,
+            pointRadius: 5,
+            pointHoverRadius: 10,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            showLine: false
+          }]
+
+          data.forEach(function(element) {
+            datasets[0].data.push({
+                x: element.date,
+                y: element.actual,
+                label: element.label
+              })
+            datasets[1].data.push({
+                x: element.date,
+                y: element.estimated,
+                label: element.label
+              })
+          });
+
+        return datasets;
+      }
+
+      _updateChart(datasets) {
+        console.log(datasets);
+        if (this.chart) {
+          this.chart.destroy();
+        }
+
+        this.ctx = this.$.chart.getContext('2d');
+
+        return new Chart(this.ctx, {
+            type: 'line',
+            data: {
+                datasets: datasets
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero:true
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cycle Time   (Days)",
+                    fontStyle: "italic",
+                    fontColor: '#939393'
+                  }
+                }],
+                xAxes: [{
+                  type: "time",
+                  time: {
+                    unit: 'month',
+                    unitStepSize: 1
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "End Date   (Month)",
+                    fontStyle: "italic",
+                    fontColor: '#939393'
+                  },
+                }]
+              },
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                    return data.datasets[0].label + ': ' + tooltipItem.yLabel;
+                  },
+                  title: function(tooltipItem, data) {
+                    return data.datasets[0].data[tooltipItem[0].index].label;
+                  }
+                }
+              }
+            }
+        });
+      }
+
+    }
+
+    window.customElements.define(AgileProcessControl.is, AgileProcessControl);
+  </script>
+</dom-module>

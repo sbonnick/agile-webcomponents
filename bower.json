@@ -1,0 +1,36 @@
+{
+  "name": "agile-webcomponents",
+  "version": "0.0.1",
+  "authors": [
+    "Stewart Bonnick"
+  ],
+  "description": "web components to visualize agile development data",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "polymer 2.0",
+    "agile",
+    "scrum",
+    "kanban"
+  ],
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sbonnick/agile-components.git"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/sbonnick/agile-components/",
+  "ignore": [],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "chart.js": "chartjs#^2.6.0"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  }
+}
