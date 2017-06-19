@@ -28,12 +28,7 @@
         return {
           data: {
             type: Array,
-            value: [{
-                label: "US1234",
-                date: new Date(),
-                estimated: 5,
-                actual: 10
-            }]
+            value: []
           },
           _datasets: {
             type: Array,
@@ -42,17 +37,26 @@
           chart: {
             type: Object,
             computed: '_updateChart(_datasets)'
+          },
+          _median_actual: {
+            type: Number,
+            value: 0
           }
         };
       }
 
       _updateData(data) {
+        if (data.length === 0)
+          return []
+
+        var actual_total = 0;
+
         var datasets = [{
             label: "Days Actual",
             data: [],
             fill: false,
-            pointRadius: 5,
-            pointHoverRadius: 10,
+            pointRadius: 4,
+            pointHoverRadius: 8,
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255,99,132,1)',
             showLine: false
@@ -60,31 +64,42 @@
             label: "Days Estimated",
             data: [],
             fill: false,
-            pointRadius: 5,
-            pointHoverRadius: 10,
+            pointRadius: 4,
+            pointHoverRadius: 8,
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgba(54, 162, 235, 1)',
             showLine: false
           }]
 
-          data.forEach(function(element) {
-            datasets[0].data.push({
-                x: element.date,
-                y: element.actual,
-                label: element.label
-              })
-            datasets[1].data.push({
-                x: element.date,
-                y: element.estimated,
-                label: element.label
-              })
-          });
+        data.forEach(function(element) {
+          actual_total += element.actual;
+          datasets[0].data.push({
+              x: element.date,
+              y: element.actual,
+              label: element.label
+            })
+          datasets[1].data.push({
+              x: element.date,
+              y: element.estimated,
+              label: element.label
+            })
+        });
+
+        this._median_actual = actual_total / data.length;
+        console.log(this._median_actual)
 
         return datasets;
       }
 
+      _tooltipLabel(tooltipItem, data) {
+        return data.datasets[0].label + ': ' + tooltipItem.yLabel;
+      }
+
+      _tooltipTitle(tooltipItem, data) {
+        return data.datasets[0].data[tooltipItem[0].index].label;
+      }
+
       _updateChart(datasets) {
-        console.log(datasets);
         if (this.chart) {
           this.chart.destroy();
         }
@@ -97,6 +112,7 @@
                 datasets: datasets
             },
             options: {
+              pluginNoData: true,
               responsive: true,
               maintainAspectRatio: true,
               scales: {
@@ -127,13 +143,29 @@
               },
               tooltips: {
                 callbacks: {
-                  label: function(tooltipItem, data) {
-                    return data.datasets[0].label + ': ' + tooltipItem.yLabel;
-                  },
-                  title: function(tooltipItem, data) {
-                    return data.datasets[0].data[tooltipItem[0].index].label;
-                  }
+                  label: this._tooltipLabel,
+                  title: this._tooltipTitle
                 }
+              },
+              annotation: {
+                annotations: [{
+                  type: 'line',
+                  mode: 'horizontal',
+                  scaleID: 'y-axis-0',
+                  value:  this._median_actual,
+                  borderColor: 'rgba(255,99,132,1)',
+                  borderWidth: 2,
+                  borderDash: [2, 2],
+                  borderDashOffset: 5,
+                  label: {
+                    enabled: true,
+                    content: 'Median',
+                    position: "right",
+                    fontColor: 'rgba(255,99,132,1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    yAdjust: 10
+                  }
+                }]
               }
             }
         });

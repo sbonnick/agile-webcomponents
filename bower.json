@@ -23,7 +23,8 @@
   "ignore": [],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "chart.js": "chartjs#^2.6.0"
+    "chart.js": "chartjs#^2.6.0",
+    "chartjs-plugin-annotation": "^0.5.5"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",

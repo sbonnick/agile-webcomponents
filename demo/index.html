@@ -21,7 +21,30 @@
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>agile-webcomponents demo</h3>
+      <h3>agile-process-control 'Basic'</h3>
+      <demo-snippet>
+        <template>
+          <agile-process-control id='apc'></agile-process-control>
+          <script>
+            var apc = document.getElementById('apc');
+            
+            apc.data = [
+              { label: "AGILE-1230", date: new Date('2017-05-5'),  estimated: 3, actual: 3  },
+              { label: "AGILE-1231", date: new Date('2017-05-8'),  estimated: 3, actual: 3  },
+              { label: "AGILE-1232", date: new Date('2017-05-10'), estimated: 3, actual: 4  },
+              { label: "AGILE-1233", date: new Date('2017-05-10'), estimated: 5, actual: 10 },
+              { label: "AGILE-1234", date: new Date('2017-05-14'), estimated: 5, actual: 10 },
+              { label: "AGILE-1235", date: new Date('2017-05-19'), estimated: 7, actual: 4  }, 
+              { label: "AGILE-1236", date: new Date('2017-05-22'), estimated: 8, actual: 14 },
+              { label: "AGILE-1237", date: new Date('2017-05-22'), estimated: 3, actual: 3  },
+              { label: "AGILE-1238", date: new Date('2017-05-25'), estimated: 3, actual: 4  },
+              { label: "AGILE-1239", date: new Date('2017-05-30'), estimated: 3, actual: 3  }
+            ]
+          </script>
+        </template>
+      </demo-snippet>
+
+      <h3>agile-process-control 'No Data'</h3>
       <demo-snippet>
         <template>
           <agile-process-control></agile-process-control>
